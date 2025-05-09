@@ -13,6 +13,14 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+
+app.use('/api', (req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  if (req.method === 'POST') {
+    console.log('Request Body:', req.body);
+  }
+  next();
+});
 app.use('/api', applicationRoutes);
 
 // Root endpoint

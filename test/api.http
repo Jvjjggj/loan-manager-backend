@@ -1,0 +1,22 @@
+### Test GET route
+GET http://localhost:5000/api/test
+Content-Type: application/json
+
+
+### Test POST /api/applications
+POST http://localhost:5000/api/applications
+Content-Type: application/json
+
+{
+  "fullName": "Test User",
+  "amount": 50000,
+  "tenure": 12,
+  "employmentStatus": "Employed",
+  "loanReason": "Education",
+  "employmentAddress": "123 Street, City"
+}
+
+
+### Test GET stats
+GET http://localhost:5000/api/stats
+Content-Type: application/json

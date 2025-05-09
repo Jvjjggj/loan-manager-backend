@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.use('/api/applications', applicationRoutes_1.default);
+app.use('/api', applicationRoutes_1.default);
 // Root endpoint
 app.get('/', (req, res) => {
     res.send('Loan Manager Backend is running');

@@ -16,14 +16,27 @@ const express_1 = __importDefault(require("express"));
 const Application_1 = __importDefault(require("../models/Application"));
 const router = express_1.default.Router();
 // POST /api/applications - submit a new loan application
-router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post('/applications', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const application = new Application_1.default(req.body);
-        yield application.save();
+        const { fullName, amount, tenure, employmentStatus, loanReason, employmentAddress } = req.body;
+        // Validate required fields
+        if (!fullName || !amount || !tenure || !employmentStatus || !loanReason || !employmentAddress) {
+            res.status(400).json({ message: 'All fields are required' });
+            return;
+        }
+        const application = yield Application_1.default.create({
+            fullName,
+            amount,
+            tenure,
+            employmentStatus,
+            loanReason,
+            employmentAddress,
+        });
         res.status(201).json({ message: 'Application submitted successfully', application });
     }
     catch (error) {
-        res.status(400).json({ error: 'Failed to submit application', details: error });
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 }));
 // GET /api/applications/stats - get dashboard statistics
@@ -35,7 +48,7 @@ router.get('/stats', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const rejected = yield Application_1.default.countDocuments({ status: 'rejected' });
         const pending = yield Application_1.default.countDocuments({ status: 'pending' });
         const averageAmountResult = yield Application_1.default.aggregate([
-            { $group: { _id: null, average: { $avg: '$amount' } } }
+            { $group: { _id: null, average: { $avg: '$amount' } } },
         ]);
         const averageAmount = ((_a = averageAmountResult[0]) === null || _a === void 0 ? void 0 : _a.average) || 0;
         const successRate = total ? ((approved / total) * 100).toFixed(2) : 0;
@@ -45,7 +58,7 @@ router.get('/stats', (req, res) => __awaiter(void 0, void 0, void 0, function* (
             rejected,
             pending,
             averageLoanAmount: averageAmount,
-            applicationSuccessRate: `${successRate}%`
+            applicationSuccessRate: `${successRate}%`,
         });
     }
     catch (error) {

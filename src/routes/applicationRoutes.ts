@@ -5,6 +5,7 @@ const router = express.Router();
 
 // POST /api/applications - submit a new loan application
 router.post('/applications', async (req: Request, res: Response) => {
+  console.log('Body received:', req.body);
   try {
     const { fullName, amount, tenure, employmentStatus, loanReason, employmentAddress } = req.body;
 
@@ -32,6 +33,7 @@ router.post('/applications', async (req: Request, res: Response) => {
 
 // GET /api/applications/stats - get dashboard statistics
 router.get('/stats', async (req: Request, res: Response) => {
+  console.log("Hi")
   try {
     const total = await LoanApplication.countDocuments();
     const approved = await LoanApplication.countDocuments({ status: 'approved' });
@@ -56,6 +58,10 @@ router.get('/stats', async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch statistics', details: error });
   }
+});
+
+router.post('/test-post', (req: Request, res: Response) => {
+  res.json({ message: 'POST to test-post is working', body: req.body });
 });
 
 export default router;
