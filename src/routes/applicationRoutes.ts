@@ -140,6 +140,9 @@ router.patch('/applications/:id/verified', async (req: Request, res: Response) =
   }
 });
 
+
+// get all applications
+
 router.get('/applications', async (req: Request, res: Response) => {
   try {
     const allApplications = await LoanApplication.find();
@@ -148,6 +151,18 @@ router.get('/applications', async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Failed to fetch all applications', error });
   }
 });
+
+
+// GET /api/applications/count - get total number of loan applications
+router.get('/applications/count', async (req: Request, res: Response) => {
+  try {
+    const count = await LoanApplication.countDocuments();
+    res.status(200).json({ totalLoans: count });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to count loan applications', error });
+  }
+});
+
 
 
 export default router;
