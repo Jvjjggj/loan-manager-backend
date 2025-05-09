@@ -32,3 +32,7 @@ Content-Type: application/json
 ### Reject a specific application (replace with actual ID)
 PATCH http://localhost:5000/api/applications/681d89abc99f8e8127275035/reject
 Content-Type: application/json
+
+### Get all loans
+GET http://localhost:5000/api/applications
+Content-Type: application/json

@@ -119,4 +119,14 @@ router.patch('/applications/:id/reject', async (req: Request, res: Response) => 
 });
 
 
+router.get('/applications', async (req: Request, res: Response) => {
+  try {
+    const allApplications = await LoanApplication.find();
+    res.json(allApplications);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch all applications', error });
+  }
+});
+
+
 export default router;
