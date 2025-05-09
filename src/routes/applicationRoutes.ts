@@ -64,4 +64,59 @@ router.post('/test-post', (req: Request, res: Response) => {
   res.json({ message: 'POST to test-post is working', body: req.body });
 });
 
+
+// GET /api/applications/pending - fetch all pending applications
+router.get('/applications/pending', async (req: Request, res: Response) => {
+  try {
+    const pendingApps = await LoanApplication.find({ status: 'pending' });
+    res.json(pendingApps);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch pending applications', error });
+  }
+});
+
+// PATCH /api/applications/:id/verify - mark application as verified
+router.patch('/applications/:id/verify', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const application = await LoanApplication.findByIdAndUpdate(
+      id,
+      { status: 'verified' }, // or 'approved'
+      { new: true }
+    );
+
+    if (!application) {
+      res.status(404).json({ message: 'Application not found' });
+      return 
+    }
+
+    res.json({ message: 'Application status updated to verified', application });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update status', error });
+  }
+});
+
+
+// PATCH /api/applications/:id/reject - mark application as rejected
+router.patch('/applications/:id/reject', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const application = await LoanApplication.findByIdAndUpdate(
+      id,
+      { status: 'rejected' },
+      { new: true }
+    );
+
+    if (!application) {
+      res.status(404).json({ message: 'Application not found' });
+      return 
+    }
+
+    res.json({ message: 'Application status updated to rejected', application });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to reject application', error });
+  }
+});
+
+
 export default router;
