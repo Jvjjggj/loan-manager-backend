@@ -119,6 +119,27 @@ router.patch('/applications/:id/reject', async (req: Request, res: Response) => 
 });
 
 
+// verified 
+router.patch('/applications/:id/verified', async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const application = await LoanApplication.findByIdAndUpdate(
+      id,
+      { status: 'verified' },
+      { new: true }
+    );
+
+    if (!application) {
+      res.status(404).json({ message: 'Application not found' });
+      return 
+    }
+
+    res.json({ message: 'Application status updated to rejected', application });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to reject application', error });
+  }
+});
+
 router.get('/applications', async (req: Request, res: Response) => {
   try {
     const allApplications = await LoanApplication.find();
